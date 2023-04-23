@@ -1,7 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class MainScreen extends JLabel {
+    private float value;
+    private float weight;
+    private float age;
     JSlider slider = new JSlider(140, 190, 165);
 
     public MainScreen() {
@@ -52,17 +57,29 @@ public class MainScreen extends JLabel {
         this.add(lastNameField);
         lastNameField.setVisible(true);
 
-        JLabel age = new JLabel("Age");
-        age.setBounds(10, 100, 100, 20);
-        age.setForeground(Color.black);
-        this.add(age);
-        age.setVisible(true);
+        JLabel ageLabel = new JLabel("Age");
+        ageLabel.setBounds(10, 100, 100, 20);
+        ageLabel.setForeground(Color.black);
+        this.add(ageLabel);
+        ageLabel.setVisible(true);
 
         JTextField ageField = new JTextField("");
         ageField.setBounds(100, 100, 70, 20);
         ageField.setForeground(Color.BLACK);
         this.add(ageField);
         ageField.setVisible(true);
+        ageField.addKeyListener(new KeyAdapter() {
+            public void keyReleased(KeyEvent e) {
+                try {
+                    value = Float.parseFloat(ageField.getText());
+                    age = value;
+                } catch (NumberFormatException exception) {
+                    System.out.println("Please enter a valid number");
+                    ageField.setText("");
+                }
+            }
+        });
+
 
         JLabel gender = new JLabel("Gender :");
         gender.setBounds(50, 200, 50, 50);
@@ -102,6 +119,17 @@ public class MainScreen extends JLabel {
         actualWeightField.setForeground(Color.BLACK);
         this.add(actualWeightField);
         actualWeightField.setVisible(true);
+        actualWeightField.addKeyListener(new KeyAdapter() {
+            public void keyReleased(KeyEvent e) {
+                try {
+                    value = Float.parseFloat(actualWeightField.getText());
+                    weight = value;
+                } catch (NumberFormatException exception) {
+                    System.out.println("Please enter a valid number");
+                    actualWeightField.setText("");
+                }
+            }
+        });
 
 
     }
