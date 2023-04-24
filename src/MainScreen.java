@@ -2,11 +2,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.concurrent.ExecutionException;
 
 public class MainScreen extends JLabel {
     private float value;
-    private float weight;
-    private float age;
+
     JSlider slider = new JSlider(140, 190, 165);
 
     public MainScreen() {
@@ -19,6 +19,15 @@ public class MainScreen extends JLabel {
         slider.setBounds(500, 50, 70, 250);
         this.add(slider);
         slider.setVisible(true);
+
+        JButton print = new JButton("Print");
+        print.setFont(new Font("MV BoLi", Font.PLAIN, 15));
+        print.setBounds(500, 400, 100, 50);
+        print.setForeground(Color.BLACK);
+        this.add(print);
+        print.setVisible(true);
+
+
 
         JLabel height = new JLabel("Height");
         height.setBounds(500, 10, 50, 20);
@@ -33,17 +42,32 @@ public class MainScreen extends JLabel {
         this.add(personalData);
         personalData.setVisible(true);
 
-        JLabel name = new JLabel("Name");
-        name.setBounds(10, 40, 100, 20);
-        name.setForeground(Color.black);
-        this.add(name);
-        name.setVisible(true);
+        JLabel nameLabel = new JLabel("Name");
+        nameLabel.setBounds(10, 40, 100, 20);
+        nameLabel.setForeground(Color.black);
+        this.add(nameLabel);
+        nameLabel.setVisible(true);
 
         JTextField nameField = new JTextField("");
         nameField.setBounds(100, 40, 70, 20);
         nameField.setForeground(Color.BLACK);
         this.add(nameField);
         nameField.setVisible(true);
+
+        nameField.addKeyListener(new KeyAdapter() {
+            public void keyReleased(KeyEvent e) {
+                try {
+                    String nameFieldText = nameField.getText();
+                    if (!nameFieldText.matches("[a-zA-Z]+")) {
+                        nameField.setText("");
+                    }
+                } catch (Exception exception) {
+                    System.out.println("Please enter a valid number");
+                    nameField.setText("");
+                }
+            }
+        });
+
 
         JLabel lastName = new JLabel("Last name");
         lastName.setBounds(10, 70, 100, 20);
@@ -56,6 +80,19 @@ public class MainScreen extends JLabel {
         lastNameField.setForeground(Color.BLACK);
         this.add(lastNameField);
         lastNameField.setVisible(true);
+        lastNameField.addKeyListener(new KeyAdapter() {
+            public void keyReleased(KeyEvent e) {
+                try {
+                    String lastNameFieldText = lastNameField.getText();
+                    if (!lastNameFieldText.matches("[a-zA-Z]+")) {
+                        lastNameField.setText("");
+                    }
+                } catch (Exception exception) {
+                    System.out.println("Please enter a valid number");
+                    lastNameField.setText("");
+                }
+            }
+        });
 
         JLabel ageLabel = new JLabel("Age");
         ageLabel.setBounds(10, 100, 100, 20);
@@ -72,7 +109,12 @@ public class MainScreen extends JLabel {
             public void keyReleased(KeyEvent e) {
                 try {
                     value = Float.parseFloat(ageField.getText());
-                    age = value;
+                    if (value>120){
+                        ageField.setText("");
+                        JOptionPane.showMessageDialog(null, "Max age is 120, Min age is 1 ","Wrong Value",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    }
+
                 } catch (NumberFormatException exception) {
                     System.out.println("Please enter a valid number");
                     ageField.setText("");
@@ -123,7 +165,11 @@ public class MainScreen extends JLabel {
             public void keyReleased(KeyEvent e) {
                 try {
                     value = Float.parseFloat(actualWeightField.getText());
-                    weight = value;
+                    if (value<1||value>300){
+                        actualWeightField.setText("");
+                        JOptionPane.showMessageDialog(null, "Max weight is 300, Min weight is 1 ","Wrong Value",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    }
                 } catch (NumberFormatException exception) {
                     System.out.println("Please enter a valid number");
                     actualWeightField.setText("");
@@ -132,7 +178,14 @@ public class MainScreen extends JLabel {
         });
 
 
+            print.addActionListener(e -> {
+                if (nameField.getText()!=" "&&lastNameField.getText()!=" "&&ageField.getText()!=" "&&actualWeightField.getText()!=" ") {
+                    System.out.println("check");
+                }
+    });
+
     }
+
 
 
 }
