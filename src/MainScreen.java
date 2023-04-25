@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -6,8 +7,12 @@ import java.util.concurrent.ExecutionException;
 
 public class MainScreen extends JLabel {
     private float value;
+    double sliderAfterCalculate;
+    double bmi;
+
 
     JSlider slider = new JSlider(140, 190, 165);
+    JLabel currentHeight;
 
     public MainScreen() {
         slider.setFont(new Font("MV BoLi", Font.PLAIN, 15));
@@ -19,6 +24,13 @@ public class MainScreen extends JLabel {
         slider.setBounds(500, 50, 70, 250);
         this.add(slider);
         slider.setVisible(true);
+        slider.addChangeListener(this::stateChanged);
+
+        currentHeight = new JLabel("height :" + slider.getValue() + " sm");
+        currentHeight.setBounds(500, 320, 150, 20);
+        currentHeight.setForeground(Color.BLACK);
+        this.add(currentHeight);
+        currentHeight.setVisible(true);
 
         JButton print = new JButton("Print");
         print.setFont(new Font("MV BoLi", Font.PLAIN, 15));
@@ -26,7 +38,6 @@ public class MainScreen extends JLabel {
         print.setForeground(Color.BLACK);
         this.add(print);
         print.setVisible(true);
-
 
 
         JLabel height = new JLabel("Height");
@@ -109,9 +120,9 @@ public class MainScreen extends JLabel {
             public void keyReleased(KeyEvent e) {
                 try {
                     value = Float.parseFloat(ageField.getText());
-                    if (value>120){
+                    if (value > 120) {
                         ageField.setText("");
-                        JOptionPane.showMessageDialog(null, "Max age is 120, Min age is 1 ","Wrong Value",
+                        JOptionPane.showMessageDialog(null, "Max age is 120, Min age is 1 ", "Wrong Value",
                                 JOptionPane.INFORMATION_MESSAGE);
                     }
 
@@ -165,9 +176,9 @@ public class MainScreen extends JLabel {
             public void keyReleased(KeyEvent e) {
                 try {
                     value = Float.parseFloat(actualWeightField.getText());
-                    if (value<1||value>300){
+                    if (value < 1 || value > 300) {
                         actualWeightField.setText("");
-                        JOptionPane.showMessageDialog(null, "Max weight is 300, Min weight is 1 ","Wrong Value",
+                        JOptionPane.showMessageDialog(null, "Max weight is 300, Min weight is 1 ", "Wrong Value",
                                 JOptionPane.INFORMATION_MESSAGE);
                     }
                 } catch (NumberFormatException exception) {
@@ -176,16 +187,31 @@ public class MainScreen extends JLabel {
                 }
             }
         });
+//        double newHeight=(slider.getValue()*0.01)*(slider.getValue()*0/01);
+//        String newWeight=actualWeightField.getText();
 
 
-            print.addActionListener(e -> {
-                if (nameField.getText()!=" "&&lastNameField.getText()!=" "&&ageField.getText()!=" "&&actualWeightField.getText()!=" ") {
-                    System.out.println("check");
+        print.addActionListener(e -> {
+            try {
+                if (nameField.getText() != null && lastNameField.getText() != null && ageField.getText() != null && actualWeightField.getText() != null) {
+                    sliderAfterCalculate = slider.getValue() * 0.01;
+                    bmi = (Integer.parseInt(actualWeightField.getText())) / (sliderAfterCalculate * sliderAfterCalculate);
+                    System.out.println("BMI is: " + bmi);
+                    JOptionPane.showMessageDialog(null, "name: " + nameField.getText() + "\n"
+                                    + "last name: " + lastNameField.getText() + "\n" + "age: " + ageField.getText() + "\n" + "height is: " + slider.getValue(), "BMI calculate",
+                            JOptionPane.INFORMATION_MESSAGE);
                 }
-    });
+            }catch (Exception exception){
+                JOptionPane.showMessageDialog(null, "all fields must be filled in", "Error Message",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+    }
+    public void stateChanged(ChangeEvent event) {
+        currentHeight.setText("height :" + slider.getValue() + " sm");
 
     }
-
-
-
 }
+
+
+
