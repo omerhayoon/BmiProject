@@ -1,12 +1,17 @@
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.concurrent.ExecutionException;
 
 public class MainScreen extends JLabel {
-    private float value;
+    private final String[] bodySize = {"Small", "Medium", "Large"};
+    private final String[] genderBox = {"Male", "Female"};
+    JComboBox maleOrFemale;
+    JComboBox bodyFrameBox;
+    float value;
     double sliderAfterCalculate;
     double bmi;
 
@@ -32,9 +37,9 @@ public class MainScreen extends JLabel {
         this.add(currentHeight);
         currentHeight.setVisible(true);
 
-        JButton print = new JButton("Print");
+        JButton print = new JButton("Print BMI");
         print.setFont(new Font("MV BoLi", Font.PLAIN, 15));
-        print.setBounds(500, 400, 100, 50);
+        print.setBounds(500, 400, 120, 50);
         print.setForeground(Color.BLACK);
         this.add(print);
         print.setVisible(true);
@@ -120,7 +125,7 @@ public class MainScreen extends JLabel {
             public void keyReleased(KeyEvent e) {
                 try {
                     value = Float.parseFloat(ageField.getText());
-                    if (value > 120) {
+                    if (value > 120||value<1) {
                         ageField.setText("");
                         JOptionPane.showMessageDialog(null, "Max age is 120, Min age is 1 ", "Wrong Value",
                                 JOptionPane.INFORMATION_MESSAGE);
@@ -140,12 +145,12 @@ public class MainScreen extends JLabel {
         this.add(gender);
         gender.setVisible(true);
 
-        JComboBox maleOrFemale = new JComboBox();
-        maleOrFemale.addItem("Male");
-        maleOrFemale.addItem("Female");
+        maleOrFemale = new JComboBox(genderBox);
         maleOrFemale.setBounds(50, 250, 100, 20);
         this.add(maleOrFemale);
         maleOrFemale.setVisible(true);
+        maleOrFemale.addActionListener(this::actionPerformed);
+
 
         JLabel bodyFrame = new JLabel("body-frame :");
         bodyFrame.setBounds(50, 300, 100, 50);
@@ -153,13 +158,11 @@ public class MainScreen extends JLabel {
         this.add(bodyFrame);
         bodyFrame.setVisible(true);
 
-        JComboBox bodyFrameBox = new JComboBox();
-        bodyFrameBox.addItem("Small");
-        bodyFrameBox.addItem("Medium");
-        bodyFrameBox.addItem("Large");
+        bodyFrameBox = new JComboBox(bodySize);
         bodyFrameBox.setBounds(50, 350, 100, 20);
         this.add(bodyFrameBox);
         bodyFrameBox.setVisible(true);
+        bodyFrameBox.addActionListener(this::actionPerformed);
 
         JLabel actualWeight = new JLabel("actual weight");
         actualWeight.setBounds(10, 130, 100, 20);
@@ -187,29 +190,61 @@ public class MainScreen extends JLabel {
                 }
             }
         });
-//        double newHeight=(slider.getValue()*0.01)*(slider.getValue()*0/01);
-//        String newWeight=actualWeightField.getText();
-
-
         print.addActionListener(e -> {
             try {
-                if (nameField.getText() != null && lastNameField.getText() != null && ageField.getText() != null && actualWeightField.getText() != null) {
+                if (nameField.getText() != null || lastNameField.getText() != null || ageField.getText() != null || actualWeightField.getText() != null) {
                     sliderAfterCalculate = slider.getValue() * 0.01;
                     bmi = (Integer.parseInt(actualWeightField.getText())) / (sliderAfterCalculate * sliderAfterCalculate);
                     System.out.println("BMI is: " + bmi);
+                    System.out.println(weightStatus(bmi));
+
                     JOptionPane.showMessageDialog(null, "name: " + nameField.getText() + "\n"
-                                    + "last name: " + lastNameField.getText() + "\n" + "age: " + ageField.getText() + "\n" + "height is: " + slider.getValue(), "BMI calculate",
+                      + "last name: " + lastNameField.getText() + "\n"
+                      + "age: " + ageField.getText() + "\n"
+                      + "height is: " + slider.getValue() + "\n"
+                      + "your BMI is: "+bmi+"\n"+" and you are in "+ weightStatus(bmi)+" status" , "BMI calculate",
                             JOptionPane.INFORMATION_MESSAGE);
                 }
-            }catch (Exception exception){
+            } catch (Exception exception) {
                 JOptionPane.showMessageDialog(null, "all fields must be filled in", "Error Message",
                         JOptionPane.INFORMATION_MESSAGE);
             }
         });
     }
+
     public void stateChanged(ChangeEvent event) {
         currentHeight.setText("height :" + slider.getValue() + " sm");
+    }
 
+    public void actionPerformed(ActionEvent event) {
+        if (event.getSource() == bodyFrameBox) {
+            bodyFrameBox.getSelectedItem();
+        }
+        if (event.getSource() == maleOrFemale) {
+            maleOrFemale.getSelectedItem();
+        }
+    }
+    public String weightStatus(double bmi){
+        String result="";
+        if (bmi<15){
+            result="Anorexic";
+        }
+        if (bmi>=15&&bmi<18.5){
+            result="Underweight";
+        }
+        if (bmi>=18.5&&bmi<=24.9){
+            result="Normal";
+        }
+        if (bmi>=25&&bmi<=29.9){
+            result="Overweight";
+        }
+        if (bmi>=30&&bmi<35){
+            result="Obese";
+        }
+        if (bmi>=35){
+            result="Extreme Obese";
+        }
+        return result;
     }
 }
 
