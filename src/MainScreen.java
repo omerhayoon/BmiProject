@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class MainScreen extends JLabel {
-    JSlider slider = new JSlider(140, 190, 165);
+    private JSlider slider = new JSlider(140, 190, 165);
     private final String[] bodySize = {"Small", "Medium", "Large"};
     private final String[] genderBox = {"Male", "Female"};
     private final JComboBox maleOrFemale;
@@ -18,10 +18,14 @@ public class MainScreen extends JLabel {
     private final JTextField ageField;
     private final JTextField actualWeightField;
     private final JLabel currentHeight;
-    float value;
-    double bmiAfterCalculate;
-    double bmi;
-    Image background;
+    private float value;
+    private double bmiAfterCalculate;
+    private double bmi;
+    private Image background;
+    private final int MAX_AGE = 120;
+    private final int MIN_AGE = 1;
+    private final int MAX_WEIGHT = 300;
+    private final int MIN_WEIGHT = 1;
 
 
     public MainScreen() {
@@ -120,7 +124,7 @@ public class MainScreen extends JLabel {
             public void keyReleased(KeyEvent e) {
                 try {
                     value = Float.parseFloat(ageField.getText());
-                    if (value > 120 || value < 1) {
+                    if (value > MAX_AGE || value < MIN_AGE) {
                         ageField.setText("");
                         JOptionPane.showMessageDialog(null, "Max age is 120, Min age is 1 ", "Wrong Value",
                                 JOptionPane.INFORMATION_MESSAGE);
@@ -180,7 +184,7 @@ public class MainScreen extends JLabel {
             public void keyReleased(KeyEvent e) {
                 try {
                     value = Float.parseFloat(actualWeightField.getText());
-                    if (value < 1 || value > 300) {
+                    if (value < MIN_WEIGHT || value > MAX_WEIGHT) {
                         actualWeightField.setText("");
                         JOptionPane.showMessageDialog(null, "Max weight is 300, Min weight is 1 ", "Wrong Value",
                                 JOptionPane.INFORMATION_MESSAGE);
@@ -213,10 +217,9 @@ public class MainScreen extends JLabel {
         }).start();
         print.addActionListener(e -> {
             bmiAfterCalculate = bmiCalculate(actualWeightField.getText());
-            JOptionPane.showMessageDialog(null, "name: " + nameField.getText() + "\n"
-                            + "last name: " + lastNameField.getText() + "\n"
+            JOptionPane.showMessageDialog(null, "name: " + nameField.getText() + " " + lastNameField.getText() + "\n"
                             + "age: " + ageField.getText() + "\n"
-                            + "height is: " + slider.getValue() + "\n"
+                            + "height: " + slider.getValue() + "\n"
                             + "your BMI is: " + bmiAfterCalculate + "\n" + "your BMI is in " + weightStatus(bmiAfterCalculate) + " status." + "\n"
                             + "your actual weight is: " + actualWeightField.getText() + "\n"
                             + "your ideal weight is: " + idealWeightCalculate(), "BMI calculate",
@@ -269,13 +272,13 @@ public class MainScreen extends JLabel {
         if (bmi >= 15 && bmi < 18.5) {
             result = "Underweight";
         }
-        if (bmi >= 18.5 && bmi <= 24.9) {
+        if (bmi >= 18.5 && bmi < 24.9) {
             result = "Normal";
         }
-        if (bmi >= 25 && bmi <= 29.9) {
+        if (bmi >= 24.9 && bmi < 29.9) {
             result = "Overweight";
         }
-        if (bmi >= 30 && bmi < 35) {
+        if (bmi >= 29.9 && bmi < 35) {
             result = "Obese";
         }
         if (bmi >= 35) {

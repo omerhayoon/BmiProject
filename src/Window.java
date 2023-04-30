@@ -1,8 +1,8 @@
 import javax.swing.*;
 
 public class Window extends JFrame {
-    private int WIDTH = 700;
-    private int HEIGHT = 500;
+    private final int WIDTH = 700;
+    private final int HEIGHT = 500;
     MainScreen mainScreen = new MainScreen();
 
 
