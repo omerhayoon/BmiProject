@@ -13,6 +13,7 @@ public class MainScreen extends JLabel {
     private final String[] bodySize = {"Small", "Medium", "Large"};
     private final String[] genderBox = {"Male", "Female"};
     private final JComboBox maleOrFemale;
+    private final JTextField nameField;
     private final JComboBox bodyFrameBox;
     private final JTextField ageField;
     private final JTextField actualWeightField;
@@ -36,19 +37,13 @@ public class MainScreen extends JLabel {
         slider.setVisible(true);
         slider.addChangeListener(this::stateChanged);
 
-        currentHeight = new JLabel("height :" + slider.getValue() + " sm");
+        currentHeight = new JLabel("Height :" + slider.getValue() + " sm");
         currentHeight.setBounds(500, 320, 150, 25);
         currentHeight.setForeground(Color.RED);
         currentHeight.setFont(new Font("MV BoLi", Font.PLAIN, 20));
         this.add(currentHeight);
         currentHeight.setVisible(true);
 
-        JButton print = new JButton("Print BMI");
-        print.setFont(new Font("MV BoLi", Font.PLAIN, 15));
-        print.setBounds(500, 400, 120, 50);
-        print.setForeground(Color.BLACK);
-        this.add(print);
-        print.setVisible(true);
 
         JLabel height = new JLabel("Height");
         height.setBounds(500, 10, 70, 20);
@@ -64,13 +59,13 @@ public class MainScreen extends JLabel {
         this.add(personalData);
         personalData.setVisible(true);
 
-        JLabel nameLabel = new JLabel("Name");
+        JLabel nameLabel = new JLabel("Name :");
         nameLabel.setBounds(10, 40, 100, 20);
         nameLabel.setForeground(Color.WHITE);
         this.add(nameLabel);
         nameLabel.setVisible(true);
 
-        JTextField nameField = new JTextField("");
+        nameField = new JTextField("");
         nameField.setBounds(100, 40, 70, 20);
         this.add(nameField);
         nameField.setVisible(true);
@@ -87,7 +82,7 @@ public class MainScreen extends JLabel {
                 }
             }
         });
-        JLabel lastName = new JLabel("Last name");
+        JLabel lastName = new JLabel("Last name :");
         lastName.setBounds(10, 70, 100, 20);
         lastName.setForeground(Color.WHITE);
         this.add(lastName);
@@ -111,7 +106,7 @@ public class MainScreen extends JLabel {
             }
         });
 
-        JLabel ageLabel = new JLabel("Age");
+        JLabel ageLabel = new JLabel("Age :");
         ageLabel.setBounds(10, 100, 100, 20);
         ageLabel.setForeground(Color.WHITE);
         this.add(ageLabel);
@@ -150,7 +145,7 @@ public class MainScreen extends JLabel {
         maleOrFemale.setVisible(true);
         maleOrFemale.addActionListener(this::actionPerformed);
 
-        JLabel bodyFrame = new JLabel("body-frame :");
+        JLabel bodyFrame = new JLabel("body size :");
         bodyFrame.setBounds(50, 300, 150, 50);
         bodyFrame.setForeground(Color.RED);
         bodyFrame.setFont(new Font("MV BoLi", Font.PLAIN, 20));
@@ -164,7 +159,7 @@ public class MainScreen extends JLabel {
         bodyFrameBox.setVisible(true);
         bodyFrameBox.addActionListener(this::actionPerformed);
 
-        JLabel actualWeight = new JLabel("actual weight");
+        JLabel actualWeight = new JLabel("Actual weight :");
         actualWeight.setBounds(10, 130, 100, 20);
         actualWeight.setForeground(Color.WHITE);
         this.add(actualWeight);
@@ -196,24 +191,45 @@ public class MainScreen extends JLabel {
                 }
             }
         });
-        print.addActionListener(e -> {
-            try {
-                if (nameField.getText() != null || lastNameField.getText() != null || ageField.getText() != null || actualWeightField.getText() != null) {
-                    bmiAfterCalculate = bmiCalculate(actualWeightField.getText());
-                    JOptionPane.showMessageDialog(null, "name: " + nameField.getText() + "\n"
-                                    + "last name: " + lastNameField.getText() + "\n"
-                                    + "age: " + ageField.getText() + "\n"
-                                    + "height is: " + slider.getValue() + "\n"
-                                    + "your BMI is: " + bmiAfterCalculate + "\n" + "your BMI is in " + weightStatus(bmiAfterCalculate) + " status." + "\n"
-                                    + "your actual weight is: " + actualWeightField.getText() + "\n"
-                                    + "your ideal weight is: " + idealWeightCalculate(), "BMI calculate",
-                            JOptionPane.INFORMATION_MESSAGE);
+        JButton print = new JButton("Print BMI");
+        print.setFont(new Font("MV BoLi", Font.PLAIN, 15));
+        print.setBounds(500, 400, 120, 50);
+        print.setForeground(Color.BLACK);
+        this.add(print);
+        print.setVisible(true);
+        new Thread(() -> {
+            while (true) {
+                if (isEmpty(nameField.getText()) || isEmpty(lastNameField.getText()) || isEmpty(ageField.getText()) || isEmpty(actualWeightField.getText())) {
+                    print.setEnabled(false);
+                } else {
+                    print.setEnabled(true);
                 }
-            } catch (Exception exception) {
-                JOptionPane.showMessageDialog(null, "all fields must be filled in", "Error Message",
-                        JOptionPane.INFORMATION_MESSAGE);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
+        }).start();
+        print.addActionListener(e -> {
+            bmiAfterCalculate = bmiCalculate(actualWeightField.getText());
+            JOptionPane.showMessageDialog(null, "name: " + nameField.getText() + "\n"
+                            + "last name: " + lastNameField.getText() + "\n"
+                            + "age: " + ageField.getText() + "\n"
+                            + "height is: " + slider.getValue() + "\n"
+                            + "your BMI is: " + bmiAfterCalculate + "\n" + "your BMI is in " + weightStatus(bmiAfterCalculate) + " status." + "\n"
+                            + "your actual weight is: " + actualWeightField.getText() + "\n"
+                            + "your ideal weight is: " + idealWeightCalculate(), "BMI calculate",
+                    JOptionPane.INFORMATION_MESSAGE);
         });
+    }
+
+    public boolean isEmpty(String text) {
+        if (text.equals("")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void addBackgroundPicture() {
@@ -223,6 +239,7 @@ public class MainScreen extends JLabel {
             ex.printStackTrace();
         }
     }
+
     public double bmiCalculate(String weight) {
         double result;
         double height = slider.getValue() * 0.01;
@@ -230,9 +247,11 @@ public class MainScreen extends JLabel {
         result = bmi;
         return result;
     }
+
     public void stateChanged(ChangeEvent event) {
         currentHeight.setText("height :" + slider.getValue() + " sm");
     }
+
     public void actionPerformed(ActionEvent event) {
         if (event.getSource() == bodyFrameBox) {
             bodyFrameBox.getSelectedItem();
@@ -241,6 +260,7 @@ public class MainScreen extends JLabel {
             maleOrFemale.getSelectedItem();
         }
     }
+
     public String weightStatus(double bmi) {
         String result = "";
         if (bmi < 15) {
@@ -263,13 +283,15 @@ public class MainScreen extends JLabel {
         }
         return result;
     }
+
     public double idealWeightCalculate() {
         double idealWeight = 0;
         int height = slider.getValue();
-        int age = Integer.parseInt(ageField.getText());
+        float age = Integer.parseInt(ageField.getText());
         idealWeight = (height - 100 + (age / 10)) * 0.9 * slimness();
         return idealWeight;
     }
+
     public double slimness() {
         double result = 0.9;
         if (bodyFrameBox.getSelectedItem() == "Medium") {
@@ -280,6 +302,7 @@ public class MainScreen extends JLabel {
         }
         return result;
     }
+
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         graphics.drawImage(background, 0, 0, getWidth(), getHeight(), this);
