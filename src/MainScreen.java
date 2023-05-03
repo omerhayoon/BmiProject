@@ -226,6 +226,7 @@ public class MainScreen extends JLabel {
                     JOptionPane.INFORMATION_MESSAGE);
         });
     }
+    //jh
 
     public boolean isEmpty(String text) {
         if (text.equals("")) {
