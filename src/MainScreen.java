@@ -77,7 +77,7 @@ public class MainScreen extends JLabel {
             public void keyReleased(KeyEvent e) {
                 try {
                     String nameFieldText = nameField.getText();
-                    if (!nameFieldText.matches("[a-zA-Z]+")) {
+                    if (!nameFieldText.matches("[a-zA-Z\\s\\-]*")) {
                         nameField.setText("");
                     }
                 } catch (Exception exception) {
@@ -100,7 +100,7 @@ public class MainScreen extends JLabel {
             public void keyReleased(KeyEvent e) {
                 try {
                     String lastNameFieldText = lastNameField.getText();
-                    if (!lastNameFieldText.matches("[a-zA-Z]+")) {
+                    if (!lastNameFieldText.matches("[a-zA-Z\\s\\-]*")) {
                         lastNameField.setText("");
                     }
                 } catch (Exception exception) {
