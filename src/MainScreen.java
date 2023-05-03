@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class MainScreen extends JLabel {
-    private JSlider slider = new JSlider(140, 190, 165);
+    private final JSlider slider = new JSlider(140, 190, 165);
     private final String[] bodySize = {"Small", "Medium", "Large"};
     private final String[] genderBox = {"Male", "Female"};
     private final JComboBox maleOrFemale;
@@ -18,14 +18,14 @@ public class MainScreen extends JLabel {
     private final JTextField ageField;
     private final JTextField actualWeightField;
     private final JLabel currentHeight;
-    private float value;
-    private double bmiAfterCalculate;
-    private double bmi;
-    private Image background;
     private final int MAX_AGE = 120;
     private final int MIN_AGE = 1;
     private final int MAX_WEIGHT = 300;
     private final int MIN_WEIGHT = 1;
+    private float value;
+    private double bmiAfterCalculate;
+    private double bmi;
+    private Image background;
 
 
     public MainScreen() {
@@ -41,8 +41,8 @@ public class MainScreen extends JLabel {
         slider.setVisible(true);
         slider.addChangeListener(this::stateChanged);
 
-        currentHeight = new JLabel("Height :" + slider.getValue() + " sm");
-        currentHeight.setBounds(500, 320, 150, 25);
+        currentHeight = new JLabel("Height :" + slider.getValue() + " cm");
+        currentHeight.setBounds(470, 320, 150, 25);
         currentHeight.setForeground(Color.RED);
         currentHeight.setFont(new Font("MV BoLi", Font.PLAIN, 20));
         this.add(currentHeight);
@@ -65,7 +65,7 @@ public class MainScreen extends JLabel {
 
         JLabel nameLabel = new JLabel("Name :");
         nameLabel.setBounds(10, 40, 100, 20);
-        nameLabel.setForeground(Color.WHITE);
+        nameLabel.setForeground(Color.BLACK);
         this.add(nameLabel);
         nameLabel.setVisible(true);
 
@@ -88,7 +88,7 @@ public class MainScreen extends JLabel {
         });
         JLabel lastName = new JLabel("Last name :");
         lastName.setBounds(10, 70, 100, 20);
-        lastName.setForeground(Color.WHITE);
+        lastName.setForeground(Color.BLACK);
         this.add(lastName);
         lastName.setVisible(true);
 
@@ -112,7 +112,7 @@ public class MainScreen extends JLabel {
 
         JLabel ageLabel = new JLabel("Age :");
         ageLabel.setBounds(10, 100, 100, 20);
-        ageLabel.setForeground(Color.WHITE);
+        ageLabel.setForeground(Color.BLACK);
         this.add(ageLabel);
         ageLabel.setVisible(true);
 
@@ -165,7 +165,7 @@ public class MainScreen extends JLabel {
 
         JLabel actualWeight = new JLabel("Actual weight :");
         actualWeight.setBounds(10, 130, 100, 20);
-        actualWeight.setForeground(Color.WHITE);
+        actualWeight.setForeground(Color.BLACK);
         this.add(actualWeight);
         actualWeight.setVisible(true);
 
@@ -219,10 +219,10 @@ public class MainScreen extends JLabel {
             bmiAfterCalculate = bmiCalculate(actualWeightField.getText());
             JOptionPane.showMessageDialog(null, "name: " + nameField.getText() + " " + lastNameField.getText() + "\n"
                             + "age: " + ageField.getText() + "\n"
-                            + "height: " + slider.getValue() + "\n"
-                            + "your BMI is: " + bmiAfterCalculate + "\n" + "your BMI is in " + weightStatus(bmiAfterCalculate) + " status." + "\n"
-                            + "your actual weight is: " + actualWeightField.getText() + "\n"
-                            + "your ideal weight is: " + idealWeightCalculate(), "BMI calculate",
+                            + "height: " + slider.getValue() + " cm" + "\n"
+                            + "your BMI is: " + bmiAfterCalculate + "\n" + "your BMI is in " + weightStatus(bmiAfterCalculate) + " range." + "\n"
+                            + "your actual weight is: " + actualWeightField.getText() + " kg" + "\n"
+                            + "your ideal weight is: " + idealWeightCalculate() + " kg", "BMI calculate",
                     JOptionPane.INFORMATION_MESSAGE);
         });
     }
@@ -237,22 +237,24 @@ public class MainScreen extends JLabel {
 
     public void addBackgroundPicture() {
         try {
-            background = ImageIO.read(Objects.requireNonNull(getClass().getResource("פרוייקט bmi 2.png")));
+            background = ImageIO.read(Objects.requireNonNull(getClass().getResource("תמונה1.png")));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
 
     public double bmiCalculate(String weight) {
-        double result;
         double height = slider.getValue() * 0.01;
         bmi = (Integer.parseInt(weight)) / (height * height);
-        result = bmi;
-        return result;
+
+        String temp = Double.toString(bmi);
+        temp = temp.substring(0, 4);
+        bmi = Double.parseDouble(temp);
+        return bmi;
     }
 
     public void stateChanged(ChangeEvent event) {
-        currentHeight.setText("height :" + slider.getValue() + " sm");
+        currentHeight.setText("height :" + slider.getValue() + " cm");
     }
 
     public void actionPerformed(ActionEvent event) {
@@ -292,6 +294,9 @@ public class MainScreen extends JLabel {
         int height = slider.getValue();
         float age = Integer.parseInt(ageField.getText());
         idealWeight = (height - 100 + (age / 10)) * 0.9 * slimness();
+        String temp = Double.toString(idealWeight);
+        temp = temp.substring(0, 5);
+        idealWeight = Double.parseDouble(temp);
         return idealWeight;
     }
 
