@@ -22,6 +22,7 @@ public class MainScreen extends JLabel {
     private final int MIN_AGE = 1;
     private final int MAX_WEIGHT = 300;
     private final int MIN_WEIGHT = 1;
+    private final int SECONDS=1000;
     private float value;
     private double bmiAfterCalculate;
     private double bmi;
@@ -47,7 +48,6 @@ public class MainScreen extends JLabel {
         currentHeight.setFont(new Font("MV BoLi", Font.PLAIN, 20));
         this.add(currentHeight);
         currentHeight.setVisible(true);
-
 
         JLabel height = new JLabel("Height");
         height.setBounds(500, 10, 70, 20);
@@ -209,7 +209,7 @@ public class MainScreen extends JLabel {
                     print.setEnabled(true);
                 }
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(SECONDS);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -226,9 +226,8 @@ public class MainScreen extends JLabel {
                     JOptionPane.INFORMATION_MESSAGE);
         });
     }
-    //jh
 
-    public boolean isEmpty(String text) {
+    private boolean isEmpty(String text) {
         if (text.equals("")) {
             return true;
         } else {
@@ -236,7 +235,7 @@ public class MainScreen extends JLabel {
         }
     }
 
-    public void addBackgroundPicture() {
+    private void addBackgroundPicture() {
         try {
             background = ImageIO.read(Objects.requireNonNull(getClass().getResource("תמונה1.png")));
         } catch (IOException ex) {
@@ -244,7 +243,7 @@ public class MainScreen extends JLabel {
         }
     }
 
-    public double bmiCalculate(String weight) {
+    private double bmiCalculate(String weight) {
         double height = slider.getValue() * 0.01;
         bmi = (Integer.parseInt(weight)) / (height * height);
 
@@ -254,11 +253,11 @@ public class MainScreen extends JLabel {
         return bmi;
     }
 
-    public void stateChanged(ChangeEvent event) {
+    private void stateChanged(ChangeEvent event) {
         currentHeight.setText("height :" + slider.getValue() + " cm");
     }
 
-    public void actionPerformed(ActionEvent event) {
+    private void actionPerformed(ActionEvent event) {
         if (event.getSource() == bodyFrameBox) {
             bodyFrameBox.getSelectedItem();
         }
@@ -267,7 +266,7 @@ public class MainScreen extends JLabel {
         }
     }
 
-    public String weightStatus(double bmi) {
+    private String weightStatus(double bmi) {
         String result = "";
         if (bmi < 15) {
             result = "Anorexic";
@@ -290,7 +289,7 @@ public class MainScreen extends JLabel {
         return result;
     }
 
-    public double idealWeightCalculate() {
+    private double idealWeightCalculate() {
         double idealWeight = 0;
         int height = slider.getValue();
         float age = Integer.parseInt(ageField.getText());
@@ -301,7 +300,7 @@ public class MainScreen extends JLabel {
         return idealWeight;
     }
 
-    public double slimness() {
+    private double slimness() {
         double result = 0.9;
         if (bodyFrameBox.getSelectedItem() == "Medium") {
             result = 1;
